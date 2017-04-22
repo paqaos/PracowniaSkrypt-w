@@ -1,0 +1,1 @@
+# PracowniaSkrypt-w
