@@ -19,7 +19,7 @@ class Minion:
         self.step = 1
         self.active = 1
         self.max = len(self.path.steps)
-        self.stepLength = 0.01
+        self.stepLength = 0.02
         pass
 
     def interact(self):

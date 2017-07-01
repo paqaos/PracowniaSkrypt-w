@@ -20,6 +20,8 @@ class Tower(pygame.sprite.Sprite):
         self.level = 1
         self.type = 1
         self.player = player
+        self.maxLevel = 5
+        self.cost = 10
 
     def update(self):
         newpos = self.calcnewpos(self.rect, self.vector)
@@ -32,6 +34,7 @@ class Tower(pygame.sprite.Sprite):
 
     def upgrade(self):
         self.level += 1
+        self.cost = (self.cost + 2 * self.level * self.cost) / (self.level)
 
 def load_png(name):
     """ Load image and return image object"""

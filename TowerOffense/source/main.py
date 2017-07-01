@@ -32,6 +32,8 @@ def main():
     game.setFont(font)
     game.setGuiSurface(background)
 
+    clock = pygame.time.Clock()
+
     # Event loop
     while 1:
         for event in pygame.event.get():
@@ -47,6 +49,7 @@ def main():
         game.render(screen)
 
         pygame.display.flip()
+        clock.tick(45)
 
 
 if __name__ == '__main__': main()

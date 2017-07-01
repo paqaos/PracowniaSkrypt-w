@@ -1,21 +1,22 @@
 import Player
 class Mine:
-    def __init__(self, player):
-        self.__player__ = player
+    def __init__(self, x,y, player, playerRef):
+        self.x = x
+        self.y = y
+        self.player = player
         self.income = 0.05
-        self.__level = 1
-        self.__cost = 1000
+        self.level = 1
+        self.cost = 1000
+        self.maxLevel = 2
+        self.type = 3
+        self.playerRef = playerRef
+
 
     def update(self):
-        self.__player__.energy += self.income
-        print self.__player__.energy
+        self.playerRef.gold += self.income
+        print self.playerRef.energy
 
     def upgrade(self):
-        if(self.__player__.energy >= self.__cost):
-            self.__player__.energy -= self.__cost
-            self.__level += 1
-            self.income *= 2
-            self.__cost = self.__cost*4
-            print "update"
-        else:
-            print "not update"
+        self.level += 1
+        self.income *= 2
+        self.cost = (self.cost + 2 * self.level * self.cost) / (self.level)

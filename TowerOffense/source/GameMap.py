@@ -25,8 +25,13 @@ class GameMap:
         self.towerB = load_png('..\\resources\\towerWhite.png')
         self.beaconA = load_png('..\\resources\\beaconBlack.png')
         self.beaconB = load_png('..\\resources\\beaconWhite.png')
+        self.mineA = load_png('..\\resources\\mineBlack.png')
+        self.mineB = load_png('..\\resources\\mineWhite.png')
+        self.minionSourceA = load_png('..\\resources\\minionSourceBlack.png')
+        self.minionSourceB = load_png('..\\resources\\minionSourceWhite.png')
         self.selected = load_png('..\\resources\\selected.png')
         self.minionWhite = load_png('..\\resources\\minionWhite.png')
+        self.minionBlack = load_png('..\\resources\\minionBlack.png')
         self.selectedItem = None
 
     def setPlayers(self, playerA, playerB):
@@ -48,6 +53,8 @@ class GameMap:
         self.drawPath(screen)
         self.drawTowers(screen)
         self.drawBeacons(screen)
+        self.drawMines(screen)
+        self.drawMinionSources(screen)
 
         self.drawUnitPath(screen)
         self.drawMinions(screen)
@@ -55,6 +62,9 @@ class GameMap:
 
     def drawMinions(self,screen):
         for minion in self.playerA.getMinions():
+            screen.blit(self.minionBlack[0], ((minion.x - self.__camera__.selectedVert) * 64 - 32, (minion.y - self.__camera__.selectedHor) * 64 - 32))
+
+        for minion in self.playerB.getMinions():
             screen.blit(self.minionWhite[0], ((minion.x - self.__camera__.selectedVert) * 64 - 32, (minion.y - self.__camera__.selectedHor) * 64 - 32))
 
     def drawSelected(self,screen):
@@ -66,6 +76,22 @@ class GameMap:
 
         for tow in self.playerB.getTowers():
             screen.blit(self.towerB[0], ((tow.x - self.__camera__.selectedVert) * 64, (tow.y - self.__camera__.selectedHor) * 64))
+
+    def drawMinionSources(self, screen):
+        for tow in self.playerA.getSources():
+            screen.blit(self.minionSourceA[0], ((tow.x - self.__camera__.selectedVert) * 64, (tow.y - self.__camera__.selectedHor) * 64))
+
+        for tow in self.playerB.getSources():
+            screen.blit(self.minionSourceB[0], ((tow.x - self.__camera__.selectedVert) * 64, (tow.y - self.__camera__.selectedHor) * 64))
+
+
+    def drawMines(self, screen):
+        for tow in self.playerA.getMines():
+            screen.blit(self.mineA[0], ((tow.x - self.__camera__.selectedVert) * 64, (tow.y - self.__camera__.selectedHor) * 64))
+
+        for tow in self.playerB.getMines():
+            screen.blit(self.mineB[0], ((tow.x - self.__camera__.selectedVert) * 64, (tow.y - self.__camera__.selectedHor) * 64))
+
 
     def drawBeacons(self,screen):
         for tow in self.playerA.getBeacons():
@@ -113,6 +139,22 @@ class GameMap:
                 return tow
 
         for tow in self.playerB.getBeacons():
+            if tow.x == self.__camera__.vertical and tow.y == self.__camera__.horizontal:
+                return tow
+
+        for tow in self.playerA.getMines():
+            if tow.x == self.__camera__.vertical and tow.y == self.__camera__.horizontal:
+                return tow
+
+        for tow in self.playerB.getMines():
+            if tow.x == self.__camera__.vertical and tow.y == self.__camera__.horizontal:
+                return tow
+
+        for tow in self.playerA.getSources():
+            if tow.x == self.__camera__.vertical and tow.y == self.__camera__.horizontal:
+                return tow
+
+        for tow in self.playerB.getSources():
             if tow.x == self.__camera__.vertical and tow.y == self.__camera__.horizontal:
                 return tow
 

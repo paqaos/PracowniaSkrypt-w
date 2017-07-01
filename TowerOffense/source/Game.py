@@ -24,19 +24,30 @@ class GameManager:
         self.__humanPlayer__.getArea().addTower(5,5,1)
         self.__humanPlayer__.getArea().addTower(6,10,1)
         self.__humanPlayer__.getArea().addBeacon(4,9,1)
+        self.__humanPlayer__.getArea().addMine(2,3,1)
+        self.__humanPlayer__.getArea().addSource(1,3,1)
+
         # cpu
         self.__cpuPlayer__.getArea().addTower(12,14,2)
         self.__cpuPlayer__.getArea().addTower(12,10,2)
         self.__cpuPlayer__.getArea().addTower(12,7,2)
         self.__cpuPlayer__.getArea().addTower(9,8,2)
         self.__cpuPlayer__.getArea().addBeacon(9,9,2)
+        self.__cpuPlayer__.getArea().addSource(13,13,2)
 
         self.__gamemap__.setPlayers(self.__humanPlayer__, self.__cpuPlayer__)
         self.selected = None
         self.__gamemap__.setPath(self.path)
 
         self.__humanPlayer__.setPath(self.path)
-        self.__humanPlayer__.addMinion()
+
+        revPathtmp = reversed(self.path.steps)
+
+        revPath = UnitPath.UnitPath()
+        for step in revPathtmp:
+            revPath.addStep(step.x, step.y)
+
+        self.__cpuPlayer__.setPath(revPath)
 
     def preparePaths(self):
         path = UnitPath.UnitPath()
@@ -104,8 +115,10 @@ class GameManager:
             self.selected = self.__gamemap__.selectedItem
 
         if event.key == pygame.K_u and self.selected != None:
-            if hasattr(self.selected, "upgrade") and self.selected.player == 1:
-                self.selected.upgrade()
+            if hasattr(self.selected, "upgrade") and self.selected.player == 1 and self.selected.level < self.selected.maxLevel:
+                if self.selected.cost <= self.__humanPlayer__.gold:
+                    self.__humanPlayer__.gold -= self.selected.cost
+                    self.selected.upgrade()
 
         return True
 
@@ -125,16 +138,29 @@ class GameManager:
             else:
                 playerColor = (240,240,240)
 
+            textContent = ""
             if self.selected.type == 1:
-                text = self.font.render("Wieza", 1, playerColor)
-                screen.blit(text, (0,581))
+                textContent = "Wieza"
 
             if self.selected.type == 2:
-                text = self.font.render("Beacon", 1, playerColor)
-                screen.blit(text, (0, 581))
+                textContent = "Beacon"
 
-            text = self.font.render(str(self.selected.level), 1, playerColor)
-            screen.blit(text, (100,581))
+            if self.selected.type == 3:
+                textContent = "Kopalnia"
+
+            if self.selected.type == 4:
+                textContent = "Garnizon"
+
+            textContent += " " + str(self.selected.level)
+            text = self.font.render(textContent, 1, playerColor)
+            screen.blit(text, (0,581))
+
+            if hasattr(self.selected, "cost") and self.selected.player == 1:
+                text = self.font.render("koszt " + str(self.selected.cost), 1, playerColor)
+                screen.blit(text, (0,610))
+
+        text = self.font.render("gold: " + str(self.__humanPlayer__.gold), 1, (10, 10, 10))
+        screen.blit(text, (300, 581))
 
     def setFont(self,font):
         self.__gamemap__.setFont(font)
