@@ -186,8 +186,13 @@ class GameManager:
             if minionA.step > minionB.step or (minionA.step == minionB.step and minionA.stepId > minionB.stepId):
                 minionB.active = 0
         else:
-            minionA.hitpoints -= ((minionB.power + minionB.bonusPower ) - minionA.bonusDefense)
-            minionB.hitpoints -= ((minionA.power + minionA.bonusPower ) - minionB.bonusDefense)
+
+            atkB = ((minionB.power + minionB.bonusPower ) - minionA.bonusDefense)
+            atkA = ((minionA.power + minionA.bonusPower ) - minionB.bonusDefense)
+            if atkB > 0:
+                minionA.hitpoints -= atkB
+            if atkA > 0:
+                minionB.hitpoints -= atkA
 
             if minionA.alive(): # enemy is alive so i have to fight
                 minionB.active = 0
