@@ -4,13 +4,14 @@ import UnitPath
 import Minion
 
 class Player:
-    def __init__(self, playerType):
+    def __init__(self, playerType, playerId):
         self.__minions__ = []
         self.__playerType = playerType
         self.__area = PlayerArea.PlayerArea(self)
         self.energy = 0
         self.__unitPath__ = UnitPath.UnitPath()
         self.gold = 0
+        self.playerId = playerId
         # towers
 
     def upgradeSource(self):
@@ -50,17 +51,18 @@ class Player:
         self.__unitPath__ = unitPath
 
     def addMinion(self, strength):
-        minion = Minion.Minion(self.__unitPath__.steps[0].x, self.__unitPath__.steps[0].x, self.__unitPath__)
+        minion = Minion.Minion(self.__unitPath__.steps[0].x, self.__unitPath__.steps[0].x, self.__unitPath__, self.playerId)
         self.__minions__.append(minion)
+        return minion
 
 class CpuPlayer(Player):
     def __init__(self):
-        Player.__init__(self,"CPU")
+        Player.__init__(self,"CPU",2)
 
 
 class HumanPlayer(Player):
     def __init__(self):
-        Player.__init__(self,"Human")
+        Player.__init__(self,"Human",1)
 
     def upgradeSource(self):
         print "human"

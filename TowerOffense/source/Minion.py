@@ -6,13 +6,10 @@ def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
 
 class Minion:
     """Basic enemy"""
-    def __init__(self, x,y, path):
-        totalHitpoints = 0
-        hitpoints = 0
-        agility = 0
-        intelligence = 0
-        strength = 0
-        elementalType = UnitType.ElementalType.NORMAL
+    def __init__(self, x,y, path, player):
+        self.totalHitpoints = 1
+        self.hitpoints = 1
+        self.power = 0
         self.x = x
         self.y = y
         self.path = path
@@ -20,6 +17,7 @@ class Minion:
         self.active = 1
         self.max = len(self.path.steps)
         self.stepLength = 0.02
+        self.player = player
         pass
 
     def interact(self):

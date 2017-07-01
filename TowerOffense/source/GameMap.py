@@ -64,8 +64,16 @@ class GameMap:
         for minion in self.playerA.getMinions():
             screen.blit(self.minionBlack[0], ((minion.x - self.__camera__.selectedVert) * 64 - 32, (minion.y - self.__camera__.selectedHor) * 64 - 32))
 
+            textContent = str(minion.hitpoints) + " / " + str(minion.totalHitpoints)
+            text = self.font.render(textContent, 1, (0,0,0))
+            screen.blit(text, ((minion.x - self.__camera__.selectedVert) * 64 - 16, (minion.y - self.__camera__.selectedHor) * 64 - 48))
+
         for minion in self.playerB.getMinions():
             screen.blit(self.minionWhite[0], ((minion.x - self.__camera__.selectedVert) * 64 - 32, (minion.y - self.__camera__.selectedHor) * 64 - 32))
+
+            textContent = str(minion.hitpoints) + " / " + str(minion.totalHitpoints)
+            text = self.font.render(textContent, 1, (250, 250, 250))
+            screen.blit(text, ( (minion.x - self.__camera__.selectedVert) * 64 - 16, (minion.y - self.__camera__.selectedHor) * 64 - 48))
 
     def drawSelected(self,screen):
         screen.blit(self.selected[0], ((self.__camera__.vertical - self.__camera__.selectedVert) *64, (self.__camera__.horizontal - self.__camera__.selectedHor) * 64))

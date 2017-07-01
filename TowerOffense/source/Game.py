@@ -126,6 +126,20 @@ class GameManager:
         self.__humanPlayer__.update()
         self.__cpuPlayer__.update()
 
+        minions = self.__cpuPlayer__.getMinions() + self.__humanPlayer__.getMinions()
+
+        minionsCount = len(minions)
+
+        for i in range(minionsCount):
+            for j in range(i):
+                self.checkCollision(minions[i], minions[j])
+
+    def checkCollision(self, minionA, minionB):
+        if abs(minionA.x - minionB.x) + abs(minionA.y - minionB.y) > 1:
+            return
+
+        sameTeam = minionA.player == minionB.player
+
     def render(self,screen):
         self.__gamemap__.draw(screen)
         screen.blit(self.surface, (0, 576))
