@@ -34,6 +34,7 @@ def main():
 
     clock = pygame.time.Clock()
 
+    result = None
     # Event loop
     while 1:
         for event in pygame.event.get():
@@ -42,7 +43,7 @@ def main():
             if event.type == KEYDOWN and game.process_input(event) == False:
                 return
 
-        game.update()
+        result = game.update()
 
         screen.blit(background, (0, 0))
 
@@ -50,6 +51,13 @@ def main():
 
         pygame.display.flip()
         clock.tick(45)
+
+        if result == 1:
+            print "wygral gracz"
+            return
+        elif result == 2:
+            print "wygralo cpu"
+            return
 
 
 if __name__ == '__main__': main()

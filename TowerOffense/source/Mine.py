@@ -4,9 +4,9 @@ class Mine:
         self.x = x
         self.y = y
         self.player = player
-        self.income = 0.05
+        self.income = 0.025
         self.level = 1
-        self.cost = 1000
+        self.cost = 500
         self.maxLevel = 2
         self.type = 3
         self.playerRef = playerRef
@@ -14,7 +14,6 @@ class Mine:
 
     def update(self):
         self.playerRef.gold += self.income
-        print self.playerRef.energy
 
     def upgrade(self):
         self.level += 1

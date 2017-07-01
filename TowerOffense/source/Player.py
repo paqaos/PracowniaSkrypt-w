@@ -55,6 +55,19 @@ class Player:
         self.__minions__.append(minion)
         return minion
 
+    def processDead(self):
+        toDel = []
+        for minion in self.__minions__:
+            if not minion.alive():
+                toDel.append(minion)
+
+        cost = len(toDel)
+        for minion in toDel:
+            cost += minion.power
+            self.__minions__.remove(minion)
+
+        return cost
+
 class CpuPlayer(Player):
     def __init__(self):
         Player.__init__(self,"CPU",2)

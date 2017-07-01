@@ -1,6 +1,4 @@
 class Camera:
-
-
     def __init__(self):
         self.vertical = 0
         self.horizontal = 0

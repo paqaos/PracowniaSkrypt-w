@@ -5,3 +5,4 @@ class Beacon:
         self.level = 1
         self.type = 2
         self.player = player
+        self.areaRange = 3

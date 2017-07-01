@@ -51,6 +51,13 @@ class GameMap:
 
     def draw(self,screen):
         self.drawPath(screen)
+
+        if self.selectedItem != None and hasattr(self.selectedItem, "areaRange"):
+            pygame.draw.circle(screen, (60,60,60),
+                               ((self.selectedItem.x - self.__camera__.selectedVert) * 64 + 32, (self.selectedItem.y - self.__camera__.selectedHor) * 64 + 32)
+                               , int(self.selectedItem.areaRange * 64),3)
+
+
         self.drawTowers(screen)
         self.drawBeacons(screen)
         self.drawMines(screen)

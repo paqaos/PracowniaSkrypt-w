@@ -127,18 +127,77 @@ class GameManager:
         self.__cpuPlayer__.update()
 
         minions = self.__cpuPlayer__.getMinions() + self.__humanPlayer__.getMinions()
+        towers = self.__cpuPlayer__.getTowers() + self.__humanPlayer__.getTowers()
+        beacons = self.__cpuPlayer__.getBeacons() + self.__humanPlayer__.getBeacons()
 
         minionsCount = len(minions)
+        towersCount = len(towers)
+        beaconsCount = len(beacons)
+
+        for i in range(minionsCount):
+            minions[i].bonusPower = 0
+            minions[i].bonusDefense = 0
+
+        for i in range(towersCount):
+            for j in range(minionsCount):
+                self.rangeTower(towers[i], minions[j])
+
+        for i in range(beaconsCount):
+            for j in range(minionsCount):
+                self.rangeBeacon(beacons[i], minions[j])
 
         for i in range(minionsCount):
             for j in range(i):
                 self.checkCollision(minions[i], minions[j])
 
+        deadHuman = self.__humanPlayer__.processDead()
+        deadCpu = self.__cpuPlayer__.processDead()
+
+        self.__humanPlayer__.gold += deadCpu
+        self.__cpuPlayer__.gold += deadHuman
+
+        # next minions
+
+        minions = self.__cpuPlayer__.getMinions() + self.__humanPlayer__.getMinions()
+
+        for minion in minions:
+            if minion.win == 1:
+                return minion.player
+
+    def rangeTower(self, tower, minion):
+        distance = pow(pow(minion.x - tower.x, 2.0) + pow(minion.y - tower.y, 2.0), 0.5)
+
+        if distance < tower.areaRange and minion.player == tower.player:
+            minion.bonusPower += tower.level
+
+    def rangeBeacon(self, beacon, minion):
+        distance = pow(pow(minion.x - beacon.x, 2.0) + pow(minion.y - beacon.y, 2.0), 0.5)
+
+        if distance < beacon.areaRange and minion.player == beacon.player:
+            minion.bonusDefense += beacon.level
+
     def checkCollision(self, minionA, minionB):
-        if abs(minionA.x - minionB.x) + abs(minionA.y - minionB.y) > 1:
+        if abs(minionA.x - minionB.x) + abs(minionA.y - minionB.y) > 0.8:
             return
 
         sameTeam = minionA.player == minionB.player
+
+        if sameTeam:
+            if minionA.step > minionB.step or (minionA.step == minionB.step and minionA.stepId > minionB.stepId):
+                minionB.active = 0
+        else:
+            minionA.hitpoints -= ((minionB.power + minionB.bonusPower ) - minionA.bonusDefense)
+            minionB.hitpoints -= ((minionA.power + minionA.bonusPower ) - minionB.bonusDefense)
+
+            if minionA.alive(): # enemy is alive so i have to fight
+                minionB.active = 0
+            else: # enemy is dead, i can run now
+                minionB.active = 1
+
+            if minionB.alive():
+                minionA.active = 0
+            else:
+                minionA.active = 1
 
     def render(self,screen):
         self.__gamemap__.draw(screen)
@@ -170,7 +229,7 @@ class GameManager:
             screen.blit(text, (0,581))
 
             if hasattr(self.selected, "cost") and self.selected.player == 1:
-                text = self.font.render("koszt " + str(self.selected.cost), 1, playerColor)
+                text = self.font.render("koszt [u] " + str(self.selected.cost), 1, playerColor)
                 screen.blit(text, (0,610))
 
         text = self.font.render("gold: " + str(self.__humanPlayer__.gold), 1, (10, 10, 10))
