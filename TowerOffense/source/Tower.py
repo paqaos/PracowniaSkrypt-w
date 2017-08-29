@@ -23,6 +23,7 @@ class Tower(pygame.sprite.Sprite):
         self.maxLevel = 5
         self.cost = 10
         self.areaRange = 2
+        self.order = 0
 
     def update(self):
         newpos = self.calcnewpos(self.rect, self.vector)

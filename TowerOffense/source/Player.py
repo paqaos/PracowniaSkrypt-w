@@ -2,6 +2,7 @@ import MinionSource
 import PlayerArea
 import UnitPath
 import Minion
+import math
 
 class Player:
     def __init__(self, playerType, playerId):
@@ -72,6 +73,47 @@ class CpuPlayer(Player):
     def __init__(self):
         Player.__init__(self,"CPU",2)
 
+    def ai(self):
+
+        if len(self.aiorder) > 0:
+            curElement = self.aiorder[0]
+            if self.gold > curElement.cost:
+                self.gold -= curElement.cost
+                self.aiorder.remove(curElement)
+                curElement.upgrade()
+                curElement.order *= 1.5
+                print "upgrade"
+
+                if curElement.maxLevel != curElement.level:
+                    self.aiorder.append(curElement)
+
+                self.reorderAi()
+
+    def prepareAi(self):
+
+        self.aiorder = []
+        count = 0
+
+        for tow in self.getTowers():
+            tow.order = tow.cost * pow(2, 5 - count)
+            count += 1
+            self.aiorder.append(tow)
+
+        for min in self.getSources():
+            min.order = min.cost / 2.0
+            self.aiorder.append(min)
+
+        for min in self.getMines():
+            min.order = min.cost
+            self.aiorder.append(min)
+        
+        self.reorderAi()
+
+    def reorderAi(self):
+        self.aiorder = sorted(self.aiorder, key=lambda element: element.order)
+        
+        curElement = self.aiorder[0]
+        print curElement.cost
 
 class HumanPlayer(Player):
     def __init__(self):

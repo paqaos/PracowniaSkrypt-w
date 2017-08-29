@@ -6,3 +6,4 @@ class Beacon:
         self.type = 2
         self.player = player
         self.areaRange = 3
+        self.order = 0

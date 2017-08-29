@@ -14,15 +14,16 @@ class MinionSource:
         self.playerRef = playerRef
         self.globalDelta = 0
         self.getTicksLastFrame = 0
-        self.cost = 250
-        self.maxLevel = 3
+        self.cost = 150
+        self.maxLevel = 4
+        self.order = 0
 
     def showUpgrade(self):
         raise NotImplemented
 
     def upgrade(self):
+        self.cost = self.cost * ( 1 + 1.5 * self.level) / (self.level)
         self.level += 1
-        self.cost = (self.cost + 2 * self.level * self.cost) / (self.level)
 
     def update(self):
         t = pygame.time.get_ticks()
@@ -41,3 +42,4 @@ class MinionSource:
         minion.totalHitpoints = 3 + self.level * 2
         minion.hitpoints = 3 + self.level * 2
         minion.power = 1 + self.level
+        minion.powerrange = self.level / 2.0

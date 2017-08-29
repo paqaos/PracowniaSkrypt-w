@@ -1,6 +1,8 @@
 import Player
 import pygame
 from pygame.locals import *
+from random import randint
+
 import Camera
 import GameMap
 import UnitPath
@@ -34,6 +36,9 @@ class GameManager:
         self.__cpuPlayer__.getArea().addTower(9,8,2)
         self.__cpuPlayer__.getArea().addBeacon(9,9,2)
         self.__cpuPlayer__.getArea().addSource(13,13,2)
+        self.__cpuPlayer__.getArea().addMine(12,5,2)
+
+        self.__cpuPlayer__.prepareAi()
 
         self.__gamemap__.setPlayers(self.__humanPlayer__, self.__cpuPlayer__)
         self.selected = None
@@ -122,9 +127,13 @@ class GameManager:
 
         return True
 
+    def process_ai(self):
+        self.__cpuPlayer__.ai()
+
     def update(self):
         self.__humanPlayer__.update()
         self.__cpuPlayer__.update()
+        self.process_ai()
 
         minions = self.__cpuPlayer__.getMinions() + self.__humanPlayer__.getMinions()
         towers = self.__cpuPlayer__.getTowers() + self.__humanPlayer__.getTowers()
@@ -133,6 +142,7 @@ class GameManager:
         minionsCount = len(minions)
         towersCount = len(towers)
         beaconsCount = len(beacons)
+
 
         for i in range(minionsCount):
             minions[i].bonusPower = 0
@@ -186,9 +196,10 @@ class GameManager:
             if minionA.step > minionB.step or (minionA.step == minionB.step and minionA.stepId > minionB.stepId):
                 minionB.active = 0
         else:
-
-            atkB = ((minionB.power + minionB.bonusPower ) - minionA.bonusDefense)
-            atkA = ((minionA.power + minionA.bonusPower ) - minionB.bonusDefense)
+            bonusA = randint(0,int(minionA.powerrange)+1)
+            bonusB = randint(0,int(minionB.powerrange)+1)
+            atkB = ((minionB.power + minionB.bonusPower + bonusB) - minionA.bonusDefense)
+            atkA = ((minionA.power + minionA.bonusPower + bonusA) - minionB.bonusDefense)
             if atkB > 0:
                 minionA.hitpoints -= atkB
             if atkA > 0:

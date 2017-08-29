@@ -9,6 +9,7 @@ class Minion:
         self.totalHitpoints = 1
         self.hitpoints = 1
         self.power = 1
+        self.powerrange = 1
         self.bonusPower = 0
         self.bonusDefense = 0
         self.x = x
