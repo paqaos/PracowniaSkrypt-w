@@ -33,6 +33,7 @@ class GameMap:
         self.minionWhite = load_png('..\\resources\\minionWhite.png')
         self.minionBlack = load_png('..\\resources\\minionBlack.png')
         self.selectedItem = None
+        self.canBuild = False
 
     def setPlayers(self, playerA, playerB):
         self.playerA = playerA
@@ -137,6 +138,20 @@ class GameMap:
         self.unitPath = unitpath
 
     def setSelected(self):
+        tmpSelect = self.__findSelected__()
+        self.selectedItem = tmpSelect
+        self.selX = self.__camera__.vertical
+        self.selY = self.__camera__.horizontal
+
+        onPath = False
+        for tow in self.path:
+            if tow[1] == self.selX and tow[0] == self.selY:
+                onPath = True
+
+        self.canBuild = self.selX != 15 - self.selY and self.selectedItem == None and not onPath
+
+    def buildTower(self):
+        self.playerA.getArea().addTower(self.selX, self.selY, 1)
         tmpSelect = self.__findSelected__()
         self.selectedItem = tmpSelect
 

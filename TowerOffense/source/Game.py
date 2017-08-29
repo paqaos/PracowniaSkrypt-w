@@ -11,7 +11,7 @@ class GameManager:
     """Game manager"""
 
     def __init__(self):
-
+        self.isSelected = 0
         self.path = self.preparePaths()
         self.__cpuPlayer__ = Player.CpuPlayer()
         self.__humanPlayer__ = Player.HumanPlayer()
@@ -53,6 +53,7 @@ class GameManager:
             revPath.addStep(step.x, step.y)
 
         self.__cpuPlayer__.setPath(revPath)
+        self.newTowerCost = (len(self.__humanPlayer__.getTowers()) + 1 ) * 20
 
     def preparePaths(self):
         path = UnitPath.UnitPath()
@@ -115,9 +116,17 @@ class GameManager:
             if self.__camera__.vertical > 0:
                 self.__camera__.movePosition(-1, 0)
 
+
+
         if event.key == pygame.K_RETURN:
             self.__gamemap__.setSelected()
             self.selected = self.__gamemap__.selectedItem
+
+        if event.key == pygame.K_b and self.selected == None:
+            if self.newTowerCost <= self.__humanPlayer__.gold:
+                self.__humanPlayer__.gold -= self.newTowerCost
+                self.__gamemap__.buildTower()
+                self.newTowerCost = (len(self.__humanPlayer__.getTowers()) + 1 ) * 20
 
         if event.key == pygame.K_u and self.selected != None:
             if hasattr(self.selected, "upgrade") and self.selected.player == 1 and self.selected.level < self.selected.maxLevel:
@@ -250,6 +259,13 @@ class GameManager:
 
         text = self.font.render("gold: " + str(self.__humanPlayer__.gold), 1, (10, 10, 10))
         screen.blit(text, (300, 581))
+
+        content = "buduj wieze " 
+        if self.__gamemap__.canBuild:
+            content += "[b] "
+        content += str(self.newTowerCost)
+        text = self.font.render(content,1,(10, 10, 10))
+        screen.blit(text, (300,610))
 
     def setFont(self,font):
         self.__gamemap__.setFont(font)
