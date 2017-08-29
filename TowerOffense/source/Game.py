@@ -18,6 +18,7 @@ class GameManager:
         self.__players__ = [self.__humanPlayer__, self.__cpuPlayer__]
         self.__camera__ = Camera.Camera()
         self.__gamemap__ = GameMap.GameMap(self.__camera__)
+        self.difficulty = 0
 
 
         # human
@@ -116,7 +117,13 @@ class GameManager:
             if self.__camera__.vertical > 0:
                 self.__camera__.movePosition(-1, 0)
 
-
+        if event.key == pygame.K_i and self.difficulty < 5:
+            print 'dodano AI+1'
+            self.difficulty += 1
+        
+        if event.key == pygame.K_k and self.difficulty > 0:
+            print 'usunieto AI-1'
+            self.difficulty -= 1
 
         if event.key == pygame.K_RETURN:
             self.__gamemap__.setSelected()
@@ -143,6 +150,7 @@ class GameManager:
         self.__humanPlayer__.update()
         self.__cpuPlayer__.update()
         self.process_ai()
+        self.__cpuPlayer__.setDifficulty(self.difficulty)
 
         minions = self.__cpuPlayer__.getMinions() + self.__humanPlayer__.getMinions()
         towers = self.__cpuPlayer__.getTowers() + self.__humanPlayer__.getTowers()
@@ -151,7 +159,6 @@ class GameManager:
         minionsCount = len(minions)
         towersCount = len(towers)
         beaconsCount = len(beacons)
-
 
         for i in range(minionsCount):
             minions[i].bonusPower = 0

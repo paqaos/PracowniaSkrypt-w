@@ -13,6 +13,7 @@ class Player:
         self.__unitPath__ = UnitPath.UnitPath()
         self.gold = 0
         self.playerId = playerId
+        self.goldMultiplier = 1.0
         # towers
 
     def upgradeSource(self):
@@ -72,8 +73,11 @@ class Player:
 class CpuPlayer(Player):
     def __init__(self):
         Player.__init__(self,"CPU",2)
+        self.level = 0
+        self.goldMultiplier = 1.0 + 0.1 * self.level
 
     def ai(self):
+        self.goldMultiplier = 1.0 + 0.1 * self.level
 
         if len(self.aiorder) > 0:
             curElement = self.aiorder[0]
@@ -89,8 +93,10 @@ class CpuPlayer(Player):
 
                 self.reorderAi()
 
-    def prepareAi(self):
+    def setDifficulty(self, level):
+        self.level = level
 
+    def prepareAi(self):
         self.aiorder = []
         count = 0
 

@@ -13,7 +13,7 @@ class Mine:
         self.order = 0
 
     def update(self):
-        self.playerRef.gold += self.income
+        self.playerRef.gold += (self.income * self.playerRef.goldMultiplier)
 
     def upgrade(self):
         self.income *= 2
