@@ -154,6 +154,7 @@ class GameMap:
         self.playerA.getArea().addTower(self.selX, self.selY, 1)
         tmpSelect = self.__findSelected__()
         self.selectedItem = tmpSelect
+        self.canBuild = False
 
     def __findSelected__(self):
         for tow in self.playerA.getTowers():

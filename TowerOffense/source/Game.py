@@ -129,11 +129,12 @@ class GameManager:
             self.__gamemap__.setSelected()
             self.selected = self.__gamemap__.selectedItem
 
-        if event.key == pygame.K_b and self.selected == None:
+        if event.key == pygame.K_b and self.__gamemap__.canBuild:
             if self.newTowerCost <= self.__humanPlayer__.gold:
                 self.__humanPlayer__.gold -= self.newTowerCost
                 self.__gamemap__.buildTower()
                 self.newTowerCost = (len(self.__humanPlayer__.getTowers()) + 1 ) * 20
+                self.selected = self.__gamemap__.selectedItem
 
         if event.key == pygame.K_u and self.selected != None:
             if hasattr(self.selected, "upgrade") and self.selected.player == 1 and self.selected.level < self.selected.maxLevel:
