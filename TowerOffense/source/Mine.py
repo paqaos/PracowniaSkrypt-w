@@ -17,5 +17,5 @@ class Mine:
 
     def upgrade(self):
         self.income *= 2
-        self.cost = self.cost ( 1 + 1.5 * self.level) / (self.level)
+        self.cost = self.cost * ( 1 + 1.5 * self.level) / (self.level)
         self.level += 1
